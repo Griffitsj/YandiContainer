@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EDFF02B9-423D-4851-AB5D-EB78F60519DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D39A4229-5274-4D6F-B8B1-034DD616DE3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandiContainer", "src\YandiContainer\YandiContainer.csproj", "{5E24E47D-5862-449A-8F6E-6A1482118098}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandiContainerTest", "test\YandiContainerTest\YandiContainerTest.csproj", "{59689517-D0A7-46F5-BDC1-E30078CEF89A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E24E47D-5862-449A-8F6E-6A1482118098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E24E47D-5862-449A-8F6E-6A1482118098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E24E47D-5862-449A-8F6E-6A1482118098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E24E47D-5862-449A-8F6E-6A1482118098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59689517-D0A7-46F5-BDC1-E30078CEF89A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59689517-D0A7-46F5-BDC1-E30078CEF89A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59689517-D0A7-46F5-BDC1-E30078CEF89A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59689517-D0A7-46F5-BDC1-E30078CEF89A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5E24E47D-5862-449A-8F6E-6A1482118098} = {EDFF02B9-423D-4851-AB5D-EB78F60519DD}
+		{59689517-D0A7-46F5-BDC1-E30078CEF89A} = {D39A4229-5274-4D6F-B8B1-034DD616DE3D}
+	EndGlobalSection
+EndGlobal
