@@ -5,7 +5,7 @@ using System.Text;
 
 namespace YandiContainer.Registration
 {
-    public class RegistrationKey : IEquatable<RegistrationKey>
+    internal sealed class RegistrationKey : IEquatable<RegistrationKey>
     {
         private readonly string name;
         private readonly Type type;

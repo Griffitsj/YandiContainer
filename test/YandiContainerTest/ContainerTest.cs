@@ -11,7 +11,7 @@ using YandiContainer.Registration;
 namespace YandiContainerTest
 {
     [TestClass]
-    public class Container2Test
+    public class ContainerTest
     {
         Container container;
 

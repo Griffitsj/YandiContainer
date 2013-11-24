@@ -7,17 +7,17 @@ using YandiContainer.Registration;
 
 namespace YandiContainer
 {
-    public class Container : IDisposable
+    public sealed class Container : IDisposable
     {
         // TODO: 
-        //  1. Consider concurrency - use Concurrent Dictionary ?
+        //  1. Consider concurrency ?
         //  2. Register container in the container   
         //  3. RegistrationEntry dependencies have too many duplicated type properties.
         //  4. Register lifetimes and factories in the container?
-        //  5. Child containers
+        //  5. Child containers - create separate ChildContainer class?
         //  6. More Tests
         //  7. High performance DefaultFactory
-        Dictionary<RegistrationKey, RegistrationEntry> registrations = new Dictionary<RegistrationKey, RegistrationEntry>();
+        RegistrationRepository repository = new RegistrationRepository();
 
         public Container()
         {
@@ -33,60 +33,62 @@ namespace YandiContainer
 
         public void AddRegistrationEntry(Type type, RegistrationEntry entry)
         {
-            this.registrations.Add(new RegistrationKey(type), entry);
+            this.repository.AddRegistrationEntry(type, entry);
         }
 
         private RegistrationEntry AddDefaultRegistrationEntry(Type type)
         {
-            var registrationEntry = new RegistrationEntry(type, string.Empty, new TransientLifetime(), new DefaultFactory(type));
-            this.registrations.Add(new RegistrationKey(type), registrationEntry);
+            var registrationEntry = new RegistrationEntry(type);
+            this.repository.AddRegistrationEntry(type, registrationEntry);
             return registrationEntry;
         }
 
         public object Resolve(Type type)
         {
-            RegistrationEntry re;
-
-            if (this.registrations.TryGetValue(new RegistrationKey(type), out re))
+            RegistrationEntry registrationEntry = this.repository.GetRegistrationEntry(type);
+            if (registrationEntry != null)            
             {
-                return ResolveRegistrationEntry(re);
+                return ResolveRegistrationEntry(registrationEntry);
             }
             else
             {
-                re = this.AddDefaultRegistrationEntry(type);
-                return ResolveRegistrationEntry(re);
+                registrationEntry = this.AddDefaultRegistrationEntry(type);
+                return ResolveRegistrationEntry(registrationEntry);
             }
         }
 
-        private object ResolveRegistrationEntry(RegistrationEntry re)
+        private object ResolveRegistrationEntry(RegistrationEntry registrationEntry)
         {
-            var value = re.Lifetime.GetValue();
+            var value = registrationEntry.Lifetime.GetValue();
             if (value != null)
             {
                 return value;
             }
             else
             {
-                value = re.Factory.CreateObject(this);
-                re.Lifetime.SetValue(value);
+                value = registrationEntry.Factory.CreateObject(this);
+                registrationEntry.Lifetime.SetValue(value);
                 return value;
             }
         }
 
+        public Container CreateChildContainer()
+        {
+            Container childContainer = new Container();
+            childContainer.repository = this.repository;
+            return childContainer;
+        }
+
         public void Dispose()
         {
-            foreach (var item in this.registrations)
+            foreach (var item in this.repository.GetAllRegistrations())
             {
-                var disposable = item.Value.Lifetime.GetValue() as IDisposable;
+                var disposable = item.Lifetime.GetValue() as IDisposable;
                 if (disposable != null)
                 {
                     disposable.Dispose();
                 }
-
-                item.Value.Lifetime.RemoveValue();
             }
-
-            this.registrations.Clear();
         }
     }
 }
