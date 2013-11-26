@@ -6,33 +6,46 @@ using System.Text;
 
 namespace YandiContainer.Lifetime
 {
-    public sealed class ContainerLifetime : ILifetime
+    public sealed class ContainerLifetime : ILifetime, IDisposable
     {
+        private readonly object syncObject = new object();
         private object value;
-        
-        public object GetValue()
+
+        public ContainerLifetime()
         {
-            return value;
         }
 
-        public void RemoveValue()
+        public ContainerLifetime(object value)
         {
-            value = null;
+            this.value = value;
         }
 
-        public void SetValue(object newValue)
+        public object GetValue(ResolutionContext context, Func<object> creator)
         {
-            value = newValue;
+            if (value != null)
+            {
+                return value;
+            }
+            else
+            {
+                lock (syncObject)
+                {
+                    if (value != null)
+                    {
+                        return value;
+                    }
+                    else
+                    {
+                        value = creator();
+                        return value;
+                    }
+                }
+            }
         }
 
         public void Dispose()
         {
-            var disposable = this.value as IDisposable;
-            if (disposable != null)
-            {
-                disposable.Dispose();
-            }
-            this.value = null;
+            value.DisposeIfDisposable();
         }
     }
 }

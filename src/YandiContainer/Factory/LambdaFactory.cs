@@ -7,16 +7,16 @@ namespace YandiContainer.Registration
 {
     public class LambdaFactory<T> : IFactory
     {
-        Func<Container, T> factory;
+        Func<Container, ResolutionContext, T> factory;
 
-        public LambdaFactory(Func<Container, T> factory)
+        public LambdaFactory(Func<Container, ResolutionContext, T> factory)
         {
             this.factory = factory;
         }
 
-        public object CreateObject(Container container)
+        public object CreateObject(Container container, ResolutionContext resolutionContext)
         {
-            return this.factory(container);
+            return this.factory(container, resolutionContext);
         }
 
         public void Dispose()

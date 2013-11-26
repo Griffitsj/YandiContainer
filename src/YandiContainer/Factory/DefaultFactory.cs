@@ -21,7 +21,7 @@ namespace YandiContainer.Registration
             // generate delegate
         }
 
-        public object CreateObject(Container container)
+        public object CreateObject(Container container, ResolutionContext resolutionContext)
         {            
             // resolve each of the ctor dependencies using container
             // instantiate object
@@ -31,7 +31,7 @@ namespace YandiContainer.Registration
 
             foreach (var item in ctor.GetParameters())
             {
-                parameters.Add(container.Resolve(item.ParameterType));
+                parameters.Add(container.Resolve(item.ParameterType, resolutionContext));
             }
 
             return ctor.Invoke(parameters.ToArray());

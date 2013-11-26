@@ -23,6 +23,8 @@ namespace YandiContainerTest
             this.container.AddRegistrationEntry(typeof(TestClassA), new RegistrationEntry(typeof(TestClassA), new ContainerLifetime()));
             this.container.AddRegistrationEntry(typeof(TestClassB), new RegistrationEntry(typeof(TestClassB)));
             this.container.AddRegistrationEntry(typeof(TestClassC), new RegistrationEntry(typeof(TestClassC)));
+            this.container.AddRegistrationEntry(typeof(TestClassD), new RegistrationEntry(typeof(TestClassD), new PerResolveLifetime()));
+            this.container.AddRegistrationEntry(typeof(ITestClassC), new RegistrationEntry(typeof(TestClassC)));
         }
 
         [TestMethod]
@@ -57,6 +59,31 @@ namespace YandiContainerTest
             Assert.IsNotNull(autoC.TestClassB);
         }
 
+        [TestMethod]
+        public void PerResolveRegistration()
+        {
+            var c = (TestClassC)this.container.Resolve(typeof(TestClassC));
+            Assert.IsNotNull(c);
+            Assert.AreSame(c.TestClassD, c.TestClassB.TestClassD);
+
+            var c2 = (TestClassC)this.container.Resolve(typeof(TestClassC));
+            Assert.AreNotSame(c.TestClassD, c2.TestClassD);
+        }
+
+        [TestMethod]
+        public void InterfaceMapping()
+        {
+            var c = this.container.Resolve(typeof(ITestClassC));
+            Assert.IsNotNull(c);
+            Assert.IsInstanceOfType(c, typeof(TestClassC));
+        }
+
+        [TestMethod]
+        public void HierarchicalLifetime()
+        {
+            Assert.Inconclusive();
+        }
+
         public class TestClassA
         {
             public TestClassA(Container container)
@@ -69,24 +96,32 @@ namespace YandiContainerTest
 
         public class TestClassB
         {
-            public TestClassB(TestClassA testClassA)
+            public TestClassB(TestClassA testClassA, TestClassD testClassD)
             {
-                this.TestClassA = testClassA;                
+                this.TestClassA = testClassA;
+                this.TestClassD = testClassD;
             }
 
             public TestClassA TestClassA { get; private set; }
+            public TestClassD TestClassD { get; private set; }
+        }
+        
+        public interface ITestClassC
+        {
         }
 
-        public class TestClassC
+        public class TestClassC : ITestClassC
         {
-            public TestClassC(TestClassA testClassA, TestClassB testClassB)
+            public TestClassC(TestClassA testClassA, TestClassB testClassB, TestClassD testClassD)
             {
                 this.TestClassA = testClassA;
                 this.TestClassB = testClassB;
+                this.TestClassD = testClassD;
             }
 
             public TestClassA TestClassA { get; private set; }
             public TestClassB TestClassB { get; private set; }
+            public TestClassD TestClassD { get; private set; }
         }
 
         public class TestClassAutoC
@@ -99,6 +134,10 @@ namespace YandiContainerTest
 
             public TestClassA TestClassA { get; private set; }
             public TestClassB TestClassB { get; private set; }
+        }
+
+        public class TestClassD
+        {            
         }
     }
 }

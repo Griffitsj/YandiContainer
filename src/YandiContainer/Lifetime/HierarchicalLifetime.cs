@@ -5,11 +5,11 @@ using System.Text;
 
 namespace YandiContainer.Lifetime
 {
-    public sealed class TransientLifetime : ILifetime
-    {        
+    public class HierarchicalLifetime : ILifetime
+    {
         public object GetValue(ResolutionContext context, Func<object> creator)
         {
-            return creator();
+            throw new NotImplementedException();
         }
     }
 }

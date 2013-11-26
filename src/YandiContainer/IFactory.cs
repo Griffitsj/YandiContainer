@@ -7,6 +7,6 @@ namespace YandiContainer.Registration
 {
     public interface IFactory : IDisposable
     {
-        object CreateObject(Container container);
+        object CreateObject(Container container, ResolutionContext resolutionContext);
     }
 }

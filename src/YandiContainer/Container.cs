@@ -26,8 +26,7 @@ namespace YandiContainer
 
         private void AddDefaultRegistrations()
         {
-            var registrationEntry = new RegistrationEntry(typeof(Container), string.Empty, new ContainerLifetime());
-            registrationEntry.Lifetime.SetValue(this);
+            var registrationEntry = new RegistrationEntry(typeof(Container), string.Empty, new ContainerLifetime(this));
             this.AddRegistrationEntry(typeof(Container), registrationEntry);
         }
 
@@ -45,31 +44,27 @@ namespace YandiContainer
 
         public object Resolve(Type type)
         {
+            return this.Resolve(type, new ResolutionContext());
+        }
+
+        public object Resolve(Type type, ResolutionContext resolutionContext)
+        {
             RegistrationEntry registrationEntry = this.repository.GetRegistrationEntry(type);
-            if (registrationEntry != null)            
+            if (registrationEntry != null)
             {
-                return ResolveRegistrationEntry(registrationEntry);
+                return this.ResolveRegistrationEntry(registrationEntry, resolutionContext);
             }
             else
             {
                 registrationEntry = this.AddDefaultRegistrationEntry(type);
-                return ResolveRegistrationEntry(registrationEntry);
+                return this.ResolveRegistrationEntry(registrationEntry, resolutionContext);
             }
         }
 
-        private object ResolveRegistrationEntry(RegistrationEntry registrationEntry)
+        private object ResolveRegistrationEntry(RegistrationEntry registrationEntry, ResolutionContext resolutionContext)
         {
-            var value = registrationEntry.Lifetime.GetValue();
-            if (value != null)
-            {
-                return value;
-            }
-            else
-            {
-                value = registrationEntry.Factory.CreateObject(this);
-                registrationEntry.Lifetime.SetValue(value);
-                return value;
-            }
+            var value = registrationEntry.Lifetime.GetValue(resolutionContext, () => registrationEntry.Factory.CreateObject(this, resolutionContext));
+            return value;
         }
 
         public Container CreateChildContainer()
@@ -83,10 +78,10 @@ namespace YandiContainer
         {
             foreach (var item in this.repository.GetAllRegistrations())
             {
-                var disposable = item.Lifetime.GetValue() as IDisposable;
-                if (disposable != null)
+                var disposableLifetime = item.Lifetime as IDisposable;
+                if (disposableLifetime != null)
                 {
-                    disposable.Dispose();
+                    disposableLifetime.Dispose();
                 }
             }
         }

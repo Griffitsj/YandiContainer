@@ -5,10 +5,8 @@ using System.Text;
 
 namespace YandiContainer
 {
-    public interface ILifetime : IDisposable
+    public interface ILifetime
     {
-        Object GetValue();
-        void RemoveValue();
-        void SetValue(Object newValue);
+        Object GetValue(ResolutionContext context, Func<object> creator);
     }
 }
