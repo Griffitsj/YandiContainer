@@ -10,10 +10,6 @@ namespace YandiContainer
     public sealed class Container : IDisposable
     {
         // TODO: 
-        //  1. Consider concurrency ?
-        //  2. Register container in the container   
-        //  3. RegistrationEntry dependencies have too many duplicated type properties.
-        //  4. Register lifetimes and factories in the container?
         //  5. Child containers - create separate ChildContainer class?
         //  6. More Tests
         //  7. High performance DefaultFactory

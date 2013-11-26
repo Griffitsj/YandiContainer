@@ -7,17 +7,8 @@ namespace YandiContainer.Registration
 {
     internal sealed class RegistrationRepository
     {
+        private object syncObject = new object();        
         Dictionary<RegistrationKey, RegistrationEntry> registrations = new Dictionary<RegistrationKey, RegistrationEntry>();
-
-        //public RegistrationRepository(RegistrationRepository repository)
-        //{
-        //    throw new NotImplementedException();
-        //    //foreach (var item in repository.registrations)
-        //    //{
-        //    //    // Note: This will use same lifetime instance - which is wrong
-        //    //    registrations.Add(item.Key, item.Value);
-        //    //}
-        //}
 
         public void AddRegistrationEntry(Type type, RegistrationEntry entry)
         {
@@ -26,7 +17,10 @@ namespace YandiContainer.Registration
 
         public void AddRegistrationEntry(Type type, string name, RegistrationEntry entry)
         {
-            this.registrations.Add(new RegistrationKey(type), entry);
+            lock (this.syncObject)
+            {
+                this.registrations.Add(new RegistrationKey(type), entry);
+            }
         }
 
         public RegistrationEntry GetRegistrationEntry(Type type)
@@ -36,20 +30,26 @@ namespace YandiContainer.Registration
 
         public RegistrationEntry GetRegistrationEntry(Type type, string name)
         {
-            RegistrationEntry entry;
-            if (this.registrations.TryGetValue(new RegistrationKey(type), out entry))
+            lock (this.syncObject)
             {
-                return entry;
+                RegistrationEntry entry;
+                if (this.registrations.TryGetValue(new RegistrationKey(type), out entry))
+                {
+                    return entry;
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
-            {
-                return null;
-            }            
         }
 
         public IEnumerable<RegistrationEntry> GetAllRegistrations()
         {
-            return this.registrations.Values;
+            lock (this.syncObject)
+            {
+                return this.registrations.Values.ToList();
+            }
         }
     }
 }
