@@ -7,8 +7,10 @@ namespace YandiContainer.Registration
 {
     internal sealed class RegistrationRepository
     {
-        private object syncObject = new object();        
-        Dictionary<RegistrationKey, RegistrationEntry> registrations = new Dictionary<RegistrationKey, RegistrationEntry>();
+        private object syncObject = new object();
+        private bool updatedRegistrationsChanged = false;
+        private Dictionary<RegistrationKey, RegistrationEntry> registrations = new Dictionary<RegistrationKey, RegistrationEntry>();
+        private Dictionary<RegistrationKey, RegistrationEntry> updatedRegistrations = new Dictionary<RegistrationKey, RegistrationEntry>();
 
         public void AddRegistrationEntry(Type type, RegistrationEntry entry)
         {
@@ -19,7 +21,8 @@ namespace YandiContainer.Registration
         {
             lock (this.syncObject)
             {
-                this.registrations.Add(new RegistrationKey(type), entry);
+                this.updatedRegistrations[new RegistrationKey(type, name)] = entry;
+                this.updatedRegistrationsChanged = true;
             }
         }
 
@@ -30,26 +33,40 @@ namespace YandiContainer.Registration
 
         public RegistrationEntry GetRegistrationEntry(Type type, string name)
         {
-            lock (this.syncObject)
+            if (this.updatedRegistrationsChanged)
             {
-                RegistrationEntry entry;
-                if (this.registrations.TryGetValue(new RegistrationKey(type), out entry))
+                // This code is optimised to avoid any locks for the commonest situation where the registrations are setup
+                // at startup and not modified from then on.
+                lock(this.syncObject)
                 {
-                    return entry;
+                    if (updatedRegistrationsChanged)
+                    {
+                        foreach (var item in this.registrations)
+                        {
+                            this.updatedRegistrations[item.Key] = item.Value;
+                        }
+
+                        this.registrations = this.updatedRegistrations;
+                        this.updatedRegistrations = new Dictionary<RegistrationKey, RegistrationEntry>();
+                        this.updatedRegistrationsChanged = false;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
+            }
+
+            RegistrationEntry entry;
+            if (this.registrations.TryGetValue(new RegistrationKey(type), out entry))
+            {
+                return entry;
+            }
+            else
+            {
+                return null;
             }
         }
 
         public IEnumerable<RegistrationEntry> GetAllRegistrations()
         {
-            lock (this.syncObject)
-            {
-                return this.registrations.Values.ToList();
-            }
+            return this.registrations.Values.ToList();
         }
     }
 }

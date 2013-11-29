@@ -5,7 +5,7 @@ using System.Text;
 
 namespace YandiContainer.Registration
 {
-    public class LambdaFactory<T> : IFactory
+    public sealed class LambdaFactory<T> : IFactory
     {
         Func<Container, ResolutionContext, T> factory;
 

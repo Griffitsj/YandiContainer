@@ -9,7 +9,7 @@ namespace YandiContainer.Registration
     /// <summary>
     ///  ? Use Generics here ?
     /// </summary>
-    public class DefaultFactory : IFactory
+    public sealed class DefaultFactory : IFactory
     {
         private readonly Type type;
 
@@ -22,7 +22,10 @@ namespace YandiContainer.Registration
         }
 
         public object CreateObject(Container container, ResolutionContext resolutionContext)
-        {            
+        {
+            if (container == null) throw new ArgumentNullException("container");
+            if (resolutionContext == null) throw new ArgumentNullException("resolutionContext");
+            
             // resolve each of the ctor dependencies using container
             // instantiate object
             var ctor = GetMostComplexConstructor();
