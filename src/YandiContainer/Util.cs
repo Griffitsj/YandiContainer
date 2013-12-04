@@ -5,16 +5,16 @@ using System.Text;
 
 namespace YandiContainer
 {
-    public static class Util
+    public static class Extensions
     {
-        public static void DisposeIfDisposable(this object obj)
+        public static void DisposeIfDisposable(this object value)
         {
-            if (obj == null)
+            if (value == null)
             {
                 return;
             }
 
-            var disposable = obj as IDisposable;
+            var disposable = value as IDisposable;
             if (disposable != null)
             {
                 disposable.Dispose();

@@ -23,6 +23,7 @@ namespace YandiContainer.Registration
         {
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public RegistrationEntry(Type type, string name, ILifetime lifetime)
             : this(type, name, lifetime, new DefaultFactory(type))
         {
@@ -41,7 +42,7 @@ namespace YandiContainer.Registration
             this.factory = factory;
         }
 
-        public Type Type
+        public Type RegisteredType
         {
             get { return type; }
         }

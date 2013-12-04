@@ -1,18 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EDFF02B9-423D-4851-AB5D-EB78F60519DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D39A4229-5274-4D6F-B8B1-034DD616DE3D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandiContainer", "src\YandiContainer\YandiContainer.csproj", "{5E24E47D-5862-449A-8F6E-6A1482118098}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandiContainerTest", "test\YandiContainerTest\YandiContainerTest.csproj", "{59689517-D0A7-46F5-BDC1-E30078CEF89A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution", "solution", "{C3C4EA73-71DD-4E98-B7E8-03209190C5AF}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandiContainer", "src\YandiContainer\YandiContainer.csproj", "{5E24E47D-5862-449A-8F6E-6A1482118098}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandiContainerTest", "test\YandiContainerTest\YandiContainerTest.csproj", "{59689517-D0A7-46F5-BDC1-E30078CEF89A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

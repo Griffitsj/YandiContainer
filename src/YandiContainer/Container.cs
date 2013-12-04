@@ -20,6 +20,7 @@ namespace YandiContainer
             AddDefaultRegistrations();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void AddDefaultRegistrations()
         {
             var registrationEntry = new RegistrationEntry(typeof(Container), string.Empty, new ContainerLifetime(this));

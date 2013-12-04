@@ -22,6 +22,9 @@ namespace YandiContainer.Lifetime
 
         public object GetValue(ResolutionContext context, Func<object> creator)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            if (creator == null) throw new ArgumentNullException("creator");
+
             if (value != null)
             {
                 return value;

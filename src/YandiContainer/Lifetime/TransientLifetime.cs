@@ -9,6 +9,7 @@ namespace YandiContainer.Lifetime
     {        
         public object GetValue(ResolutionContext context, Func<object> creator)
         {
+            if (creator == null) throw new ArgumentNullException("creator");
             return creator();
         }
     }

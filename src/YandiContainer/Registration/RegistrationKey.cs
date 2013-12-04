@@ -10,11 +10,11 @@ namespace YandiContainer.Registration
         private readonly string name;
         private readonly Type type;
 
-        public RegistrationKey(Type type)
-        {
-            this.name = string.Empty;
-            this.type = type;
-        }
+        ////public RegistrationKey(Type type)
+        ////{
+        ////    this.name = string.Empty;
+        ////    this.type = type;
+        ////}
 
         public RegistrationKey(Type type, string name)
         {

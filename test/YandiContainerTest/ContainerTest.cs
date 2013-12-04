@@ -13,39 +13,39 @@ namespace YandiContainerTest
     [TestClass]
     public class ContainerTest
     {
-        Container container;
+        Container target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.container = new Container();
+            this.target = new Container();
 
-            this.container.AddRegistrationEntry(typeof(TestClassA), new RegistrationEntry(typeof(TestClassA), new ContainerLifetime()));
-            this.container.AddRegistrationEntry(typeof(TestClassB), new RegistrationEntry(typeof(TestClassB)));
-            this.container.AddRegistrationEntry(typeof(TestClassC), new RegistrationEntry(typeof(TestClassC)));
-            this.container.AddRegistrationEntry(typeof(TestClassD), new RegistrationEntry(typeof(TestClassD), new PerResolveLifetime()));
-            this.container.AddRegistrationEntry(typeof(ITestClassC), new RegistrationEntry(typeof(TestClassC)));
+            this.target.AddRegistrationEntry(typeof(TestClassA), new RegistrationEntry(typeof(TestClassA), new ContainerLifetime()));
+            this.target.AddRegistrationEntry(typeof(TestClassB), new RegistrationEntry(typeof(TestClassB)));
+            this.target.AddRegistrationEntry(typeof(TestClassC), new RegistrationEntry(typeof(TestClassC)));
+            this.target.AddRegistrationEntry(typeof(TestClassD), new RegistrationEntry(typeof(TestClassD), new PerResolveLifetime()));
+            this.target.AddRegistrationEntry(typeof(ITestClassC), new RegistrationEntry(typeof(TestClassC)));
         }
 
         [TestMethod]
         public void Wibble()
         {
-            var a = (TestClassA)this.container.Resolve(typeof(TestClassA));
+            var a = (TestClassA)this.target.Resolve(typeof(TestClassA));
             Assert.IsNotNull(a);
             Assert.IsNotNull(a.Container);
-            var b = (TestClassB)this.container.Resolve(typeof(TestClassB));
+            var b = (TestClassB)this.target.Resolve(typeof(TestClassB));
             Assert.IsNotNull(b);
             Assert.IsNotNull(b.TestClassA);
             Assert.AreSame(a, b.TestClassA);
 
-            var c = (TestClassC)this.container.Resolve(typeof(TestClassC));
+            var c = (TestClassC)this.target.Resolve(typeof(TestClassC));
             Assert.IsNotNull(c);
             Assert.IsNotNull(c.TestClassA);
             Assert.AreSame(a, c.TestClassA);
             Assert.IsNotNull(c.TestClassB);
             Assert.AreNotSame(b, c.TestClassB);
 
-            var c2 = (TestClassC)this.container.Resolve(typeof(TestClassC));
+            var c2 = (TestClassC)this.target.Resolve(typeof(TestClassC));
             Assert.IsNotNull(c2);
             Assert.AreNotSame(c, c2);
         }
@@ -53,7 +53,7 @@ namespace YandiContainerTest
         [TestMethod]
         public void AutoRegistration()
         {
-            var autoC = (TestClassAutoC)this.container.Resolve(typeof(TestClassAutoC));
+            var autoC = (TestClassAutoC)this.target.Resolve(typeof(TestClassAutoC));
             Assert.IsNotNull(autoC);
             Assert.IsNotNull(autoC.TestClassA);
             Assert.IsNotNull(autoC.TestClassB);
@@ -62,18 +62,18 @@ namespace YandiContainerTest
         [TestMethod]
         public void PerResolveRegistration()
         {
-            var c = (TestClassC)this.container.Resolve(typeof(TestClassC));
+            var c = (TestClassC)this.target.Resolve(typeof(TestClassC));
             Assert.IsNotNull(c);
             Assert.AreSame(c.TestClassD, c.TestClassB.TestClassD);
 
-            var c2 = (TestClassC)this.container.Resolve(typeof(TestClassC));
+            var c2 = (TestClassC)this.target.Resolve(typeof(TestClassC));
             Assert.AreNotSame(c.TestClassD, c2.TestClassD);
         }
 
         [TestMethod]
         public void InterfaceMapping()
         {
-            var c = this.container.Resolve(typeof(ITestClassC));
+            var c = this.target.Resolve(typeof(ITestClassC));
             Assert.IsNotNull(c);
             Assert.IsInstanceOfType(c, typeof(TestClassC));
         }

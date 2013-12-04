@@ -9,9 +9,12 @@ namespace YandiContainer.Lifetime
     {
         private readonly object key = new object();
 
-        public object GetValue(ResolutionContext resolutionContext, Func<object> creator)
+        public object GetValue(ResolutionContext context, Func<object> creator)
         {
-            object value = resolutionContext.GetValue(key);
+            if (context == null) throw new ArgumentNullException("context");
+            if (creator == null) throw new ArgumentNullException("creator");
+
+            object value = context.GetValue(key);
             if (value != null)
             {
                 return value;
@@ -19,7 +22,7 @@ namespace YandiContainer.Lifetime
             else
             {
                 value = creator();
-                resolutionContext.AddValue(key, value);
+                context.AddValue(key, value);
                 return value;
             }            
         }
